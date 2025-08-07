@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Web Scraping Dashboard | PVC-OLDIVO</title>
+    <meta name="description" content="Demostraciones de web scraping con Python">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Fuentes -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="loader-container">
+            <div class="progress-bar">
+                <div class="progress-bar-fill"></div>
+            </div>
+            <div class="loader-text">
+                <span class="loading-text">Cargando...</span>
+                <span class="percentage">0%</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-glassmorphism">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-spider logo-icon"></i>
+                <span class="logo-text">PVC-OLDIVO</span>
+            </a>
+            <div class="theme-switch">
+                <input type="checkbox" id="theme-toggle" style="display:none;">
+                <label for="theme-toggle" class="theme-switch-label" style="cursor:pointer; display:flex; align-items:center; gap:8px;">
+                    <i class="fas fa-sun" id="icon-sun" style="color:#f7b731; font-size:1.3rem;"></i>
+                    <span class="switch-slider" style="width:40px; height:22px; background:#e0e0e0; border-radius:12px; position:relative; display:inline-block;">
+                        <span id="switch-ball" style="position:absolute; left:2px; top:2px; width:18px; height:18px; background:white; border-radius:50%; box-shadow:0 2px 6px rgba(0,0,0,0.1); transition:left 0.3s;"></span>
+                    </span>
+                    <i class="fas fa-moon" id="icon-moon" style="color:#3867d6; font-size:1.3rem;"></i>
+                </label>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="main-card card shadow-lg" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="card-header-custom">
+                        <h1 class="page-title"><i class="fas fa-chart-bar"></i> Ejemplos de Web Scraping</h1>
+                        <p class="page-subtitle"><i class="fas fa-magic"></i> Resultados en tiempo real usando BeautifulSoup y requests.</p>
+                    </div>
+                    <div class="card-body">
+                        <!-- Tabs -->
+                        <ul class="nav nav-tabs justify-content-center" id="scrapingTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="hn-tab" data-bs-toggle="tab" data-bs-target="#hn" type="button" role="tab" aria-controls="hn" aria-selected="true">
+                                    <i class="fas fa-newspaper"></i> Hacker News
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="frutas-tab" data-bs-toggle="tab" data-bs-target="#frutas" type="button" role="tab" aria-controls="frutas" aria-selected="false">
+                                    <i class="fas fa-apple-alt"></i> Frutas GarcesFruit
+                                </button>
+                            </li>
+                        </ul>
+                        <div class="tab-content mt-4" id="scrapingTabsContent">
+                            <!-- Hacker News Tab -->
+                            <div class="tab-pane fade show active" id="hn" role="tabpanel" aria-labelledby="hn-tab">
+                                <h4 class="mb-3"><i class="fas fa-newspaper"></i> Titulares Hacker News</h4>
+                                <ul class="list-group">
+                                <div id="hnCarousel" class="carousel slide mt-4" data-bs-ride="carousel">
+                                    <div class="carousel-content-wrapper d-flex align-items-center justify-content-center position-relative">
+                                        <button class="carousel-control-prev custom-carousel-arrow" type="button" data-bs-target="#hnCarousel" data-bs-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Anterior</span>
+                                        </button>
+                                        <div class="carousel-inner flex-grow-1">
+                                            {% for group in range(0, titulos|length, 10) %}
+                                            <div class="carousel-item{% if loop.index0 == 0 %} active{% endif %}">
+                                                <ul class="list-group">
+                                                    {% for titulo in titulos[group:group+10] %}
+                                                    <li class="list-group-item">
+                                                        <span class="news-title">
+                                                            <i class="fas fa-newspaper"></i>
+                                                            <a href="{{ titulo.url }}" target="_blank" rel="noopener noreferrer" class="news-link">{{ titulo.titulo }}</a>
+                                                        </span>
+                                                    </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                        <button class="carousel-control-next custom-carousel-arrow" type="button" data-bs-target="#hnCarousel" data-bs-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Siguiente</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                </ul>
+                            </div>
+                            <!-- Frutas Tab -->
+                            <div class="tab-pane fade" id="frutas" role="tabpanel" aria-labelledby="frutas-tab">
+                                <h4 class="mb-3"><i class="fas fa-apple-alt"></i> Frutas extraídas de GarcesFruit</h4>
+                                <ul class="list-group">
+                                    {% for fruta in frutas %}
+                                    <li class="list-group-item" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
+                                        <span class="fruit-name">{{ fruta.nombre|capitalize }}</span>
+                                        <span class="fruit-description">{{ fruta.descripcion }}</span>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer text-end">
+                        <small class="fecha-actualizacion"><i class="fas fa-sync-alt spin"></i> Actualizado: {{ fecha }}</small>
+                    </div>
+                </div>
+                <div class="footer mt-4">
+                    <span class="me-2"><i class="fab fa-python"></i> Python</span>
+                    <span class="me-2"><i class="fab fa-flask"></i> Flask</span>
+                    <span class="me-2"><i class="fas fa-code"></i> BeautifulSoup</span>
+                    <span class="me-2"><i class="fas fa-spider"></i> Requests</span>
+                    <br>
+                    <span>© 2025 PVC-OLDIVO — Desarrollado con <i class="fas fa-heart pulse"></i> y mucho café</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS Animation Library -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Inicializar AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+
+        // Persistencia de tema claro/oscuro con localStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeToggle = document.getElementById('theme-toggle');
+            const switchBall = document.getElementById('switch-ball');
+            const iconSun = document.getElementById('icon-sun');
+            const iconMoon = document.getElementById('icon-moon');
+            let darkMode = false;
+
+            // Leer preferencia guardada
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                darkMode = true;
+            } else if (savedTheme === 'light') {
+                darkMode = false;
+            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                darkMode = true;
+            }
+
+            function applyTheme() {
+                if (darkMode) {
+                    document.body.classList.add('dark-theme');
+                    themeToggle.checked = true;
+                    switchBall.style.left = '20px';
+                    iconSun.style.opacity = '0.5';
+                    iconMoon.style.opacity = '1';
+                } else {
+                    document.body.classList.remove('dark-theme');
+                    themeToggle.checked = false;
+                    switchBall.style.left = '2px';
+                    iconSun.style.opacity = '1';
+                    iconMoon.style.opacity = '0.5';
+                }
+                document.querySelector('.navbar').classList.toggle('dark-theme', darkMode);
+                document.querySelector('.main-card').classList.toggle('dark-theme', darkMode);
+                document.querySelector('.card-header-custom').classList.toggle('dark-theme', darkMode);
+                document.querySelectorAll('.nav-link').forEach(e => e.classList.toggle('dark-theme', darkMode));
+                document.querySelectorAll('.list-group-item').forEach(e => e.classList.toggle('dark-theme', darkMode));
+                document.querySelectorAll('.news-title').forEach(e => e.classList.toggle('dark-theme', darkMode));
+                document.querySelectorAll('.fruit-name').forEach(e => e.classList.toggle('dark-theme', darkMode));
+                document.querySelectorAll('.fruit-description').forEach(e => e.classList.toggle('dark-theme', darkMode));
+                document.querySelector('.footer').classList.toggle('dark-theme', darkMode);
+                document.getElementById('preloader').classList.toggle('dark-theme', darkMode);
+                document.querySelector('.progress-bar-fill').classList.toggle('dark-theme', darkMode);
+            }
+
+            applyTheme();
+
+            themeToggle.addEventListener('change', function() {
+                darkMode = !darkMode;
+                localStorage.setItem('theme', darkMode ? 'dark' : 'light');
+                applyTheme();
+            });
+        });
+
+        // Simulación de carga para el preloader
+        document.addEventListener('DOMContentLoaded', function() {
+            const preloader = document.getElementById('preloader');
+            const progressBarFill = document.querySelector('.progress-bar-fill');
+            const percentageText = document.querySelector('.percentage');
+            let progress = 0;
+
+            const interval = setInterval(() => {
+                progress += 10;
+                percentageText.innerText = `${progress}%`;
+                progressBarFill.style.width = `${progress}%`;
+
+                if (progress === 100) {
+                    clearInterval(interval);
+                    preloader.classList.add('fade-out');
+                    setTimeout(() => {
+                        preloader.style.display = 'none';
+                    }, 500);
+                }
+            }, 100);
+        });
+    </script>
+</body>
+</html>
